@@ -98,22 +98,24 @@ def getImagesFromKeyword(search_url):
 
 def handleSpeechInput():
     recognizer = sr.Recognizer()
-    # マイクから音声を連続録音
-    with sr.Microphone() as source:
-        print("音声を録音してください...（5秒以内）")
-        audio_data = recognizer.listen(source, phrase_time_limit=5) #5秒で録音を停止する
+    text = None
+    while True:
+        # マイクから音声を連続録音
+        with sr.Microphone() as source:
+            print("音声を録音してください...（5秒以内）")
+            audio_data = recognizer.listen(source, phrase_time_limit=5) #5秒で録音を停止する
 
-    try:
-        # 音声をテキストに変換
-        text = recognizer.recognize_google(audio_data, language="ja-JP") # テキスト内容
-        print("テキスト化結果: " + text)
-        return text
+        try:
+            # 音声をテキストに変換
+            text = recognizer.recognize_google(audio_data, language="ja-JP") # テキスト内容
+            print("テキスト化結果: " + text)
+            return text
 
-    except sr.UnknownValueError:
-        print("音声を理解できませんでした。")
-    except sr.RequestError as e:
-        print("音声認識サービスにアクセスできませんでした。")
-    return None
+        except sr.UnknownValueError:
+            print("音声を理解できませんでした。")
+
+        except sr.RequestError as e:
+            print("音声認識サービスにアクセスできませんでした。")
 
 # 詳細URLを引数で１つ受け取り、画像ページのURLを返す
 def getImageUrl(detailsUrl):
@@ -155,7 +157,7 @@ def downloadImage(linkSet):
 def speechText(): 
 
     # 音声入力を処理
-    keyword = handleSpeechInput()
+    keyword = 'ロケット' #handleSpeechInput()
     if keyword is not None:
         search_url = search(keyword)
         print(f"検索結果のURL: {search_url}")
@@ -170,13 +172,16 @@ def speechText():
 
 
 
-def startDownload(image_urls):
-        # 取得した画像のURLをすべて表示する
-        print("取得した画像のURL:")
-        for idx, detail_url in enumerate(image_urls, 1):
-            print(f"Image {idx}: {detail_url}")
-            # 詳細urlを受け取りその画像urlを返却
-            url = getImageUrl(detail_url)
-            #setに保存されたurlから画像をダウンロード
-            downloadImage(url)
+def startDownload(image_urls, max):
+    # 取得した画像のURLをすべて表示する
+    print("取得した画像のURL:")
+    for idx, detail_url in enumerate(image_urls, 1):
+        print('idx:{}, max{}'.format(idx, max))
+        if idx > max:
+            break
+        print(f"Image {idx}: {detail_url}")
+        # 詳細urlを受け取りその画像urlを返却
+        url = getImageUrl(detail_url)
+        #setに保存されたurlから画像をダウンロード
+        downloadImage(url)
 

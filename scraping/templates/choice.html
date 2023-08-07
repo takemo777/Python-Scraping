@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>スクレイピングの世界へようこそ</h1>
+    {% comment %} {% for item in listSet%}
+    <li>{{item}}</li>
+    {%endfor %} {{forms}} {% endcomment %}
+    <form action="{% url 'app:download' %}" method="post">
+      {% csrf_token %}
+      <label for="num"></label>
+      {{max}}枚の画像が検出されました。ダウンロードする枚数を指定してください<input
+        type="number"
+        max="{{max}}"
+        min="0"
+        id="num"
+        name="max"
+      />
+      <input type="hidden" name="listSet" value="{{listSet}}" />
+      <button type="submit">送信</button>
+    </form>
+    <a href="{% url 'app:index' %}">音声入力ページに戻る</a>
+  </body>
+</html>

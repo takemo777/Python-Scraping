@@ -7,9 +7,8 @@
   </head>
   <body>
     <h1>スクレイピングの世界へようこそ</h1>
-    <form action="" method="get">
+    <form action="{% url 'app:choice' %}" method="get">
       <button type="submit" name="input audio">音声を入力</button>
     </form>
-    {% block content%}{%endblock%}
   </body>
 </html>
