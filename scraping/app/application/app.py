@@ -155,7 +155,7 @@ def speechText():
     # 詳細ページを格納するセット
     result = []
     # 音声入力を処理
-    keyword = 'ロケット'#handleSpeechInput()
+    keyword = handleSpeechInput()
     if keyword is not None:
         search_url = search(keyword)
         print(f"検索結果のURL: {search_url}")
