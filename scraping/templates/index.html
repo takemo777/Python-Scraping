@@ -4,11 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    {% block header %} {% endblock %}
   </head>
   <body>
     <h1>スクレイピングの世界へようこそ</h1>
+    {% block content %}
     <form action="{% url 'app:choice' %}" method="get">
       <button type="submit" name="input audio">音声を入力</button>
     </form>
+    {% endblock %}
   </body>
 </html>

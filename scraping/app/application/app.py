@@ -155,7 +155,7 @@ def speechText():
     # 詳細ページを格納するセット
     result = []
     # 音声入力を処理
-    keyword = handleSpeechInput()
+    keyword = 'ロケット'#handleSpeechInput()
     if keyword is not None:
         search_url = search(keyword)
         print(f"検索結果のURL: {search_url}")
@@ -183,4 +183,3 @@ def startDownload(image_urls):
         print(f'{idx}番目{download_url}')
         #urlから画像をダウンロード
         downloadImage(download_url)
-

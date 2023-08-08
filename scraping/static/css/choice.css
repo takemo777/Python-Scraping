@@ -2,6 +2,42 @@ img{
     width: 100px;
 }
 
-li {
+.container{
+    width: 100%;
+}
+
+#viewImage{
+    /*コレ*/display:flex;
+    width: 100%;
+    flex-wrap: wrap;
     list-style: none;
+}
+
+#viewImage li{
+    border:1px solid #999;
+    width: 10%;
+    flex-wrap: wrap;
+}
+
+button {
+    background-color: brown;
+    padding: 5px 20px;
+    position: relative;
+    left: 45%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+a {
+    text-decoration: none;
+    position: relative;
+    left: 42%;
+    color : black;
+}
+
+a:hover {
+    opacity: 0.5;
+}
+a:active{
+    color : red;
 }

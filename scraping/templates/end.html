@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>end</title>
-  </head>
-  <body>
-    <h1>ダウンロードが完了しました</h1>
-    <a href="{% url 'app:index' %}">ホームへ戻る</a>
-  </body>
-</html>
+{% extends './index.html' %} {% load static %} {% block header%}
+<link rel="stylesheet" href="{% static 'css/end.css' %}" />
+{% endblock %} {% block content%}
+<h3>ダウンロードが完了しました</h3>
+<a href="{% url 'app:index' %}">ホームへ戻る</a>
+{% endblock %}
