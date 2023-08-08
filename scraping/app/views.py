@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from .application import app
 from .forms import Radio
+import json
 
-listSet = None
+linkSet = None
 
 def index(request):
     
@@ -11,15 +12,17 @@ def index(request):
 def choice(request):
     if request.method == 'GET':
         if 'input audio' in request.GET:
-            global listSet
-            listSet = app.speechText()
-    return render(request, 'choice.html', {'listSet': listSet, 'max' : len(listSet)})
+            global linkSet
+            linkList = app.speechText()
+
+    return render(request, 'choice.html', {'linkList': linkList, 'max' : len(linkList)})
 
 def download(request):
     
     if request.method == 'POST':
-        max = int(request.POST["max"])
-        app.startDownload(listSet, max)
+        print(f'チェックされた値{request.POST.getlist("select")}')
+        download_url = request.POST.getlist("select")
+        app.startDownload(download_url)
         
     return render(request, 'end.html')
             

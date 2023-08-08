@@ -84,7 +84,6 @@ def getImagesFromKeyword(search_url):
 
         flag = hasNext(search_url)
         res = readResultHtml(search_url, result)
-        print(f'res:{res}')
         for i in res:
             result.add(i)
 
@@ -118,7 +117,7 @@ def handleSpeechInput():
             print("音声認識サービスにアクセスできませんでした。")
 
 # 詳細URLを引数で１つ受け取り、画像ページのURLを返す
-def getImageUrl(detailsUrl):
+def getdownload_url(detailsUrl):
     # 詳細ページにあるaタグの画像urlをセットで保存
     linkSet = set()
 
@@ -137,27 +136,26 @@ def getImageUrl(detailsUrl):
     return linkSet
 
 # 引数でgetImage関数から詳細ページから取得した画像ページのurlを取得(linkSetはセット型)
-def downloadImage(linkSet):
+def downloadImage(download_url):
 
-    for imageURL in linkSet:
-
-        imageData = requests.get(imageURL)
-
-        out_folder = Path("tkImage")
-        # フォルダを作成
-        out_folder.mkdir(exist_ok=True)
+    imageData = requests.get(download_url)
+    out_folder = Path("tkImage")
+    # フォルダを作成
+    out_folder.mkdir(exist_ok=True)
 #       ファイル名を指定
-        filename = imageURL.split("/")[-1]
-        out_path = out_folder.joinpath(filename)
+    filename = download_url.split("/")[-1]
+    out_path = out_folder.joinpath(filename)
 
 #         画像をダウンロード
-        with open(out_path, mode="wb") as f:
-            f.write(imageData.content)
+    with open(out_path, mode="wb") as f:
+        f.write(imageData.content)
 
 def speechText(): 
 
+    # 詳細ページを格納するセット
+    result = []
     # 音声入力を処理
-    keyword = 'ロケット' #handleSpeechInput()
+    keyword = handleSpeechInput()
     if keyword is not None:
         search_url = search(keyword)
         print(f"検索結果のURL: {search_url}")
@@ -167,21 +165,22 @@ def speechText():
 
         # 取得した画像が最大で何枚になるか表示する
         print(f"取得可能な画像の最大枚数: {len(image_urls)}")
-    
-    return image_urls
+
+        for idx, i in enumerate(image_urls, 1):
+            image_urls = (getdownload_url(i))
+            for element in image_urls:
+                result.append(element)
+        print(f'格納されたurl{result}')
+            
+    return result
 
 
 
-def startDownload(image_urls, max):
+def startDownload(image_urls):
     # 取得した画像のURLをすべて表示する
     print("取得した画像のURL:")
-    for idx, detail_url in enumerate(image_urls, 1):
-        print('idx:{}, max{}'.format(idx, max))
-        if idx > max:
-            break
-        print(f"Image {idx}: {detail_url}")
-        # 詳細urlを受け取りその画像urlを返却
-        url = getImageUrl(detail_url)
-        #setに保存されたurlから画像をダウンロード
-        downloadImage(url)
+    for idx, download_url in enumerate(image_urls, 1):
+        print(f'{idx}番目{download_url}')
+        #urlから画像をダウンロード
+        downloadImage(download_url)
 

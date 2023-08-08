@@ -1,15 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/choice.css' %}" />
   </head>
   <body>
     <h1>スクレイピングの世界へようこそ</h1>
-    {% comment %} {% for item in listSet%}
-    <li>{{item}}</li>
-    {%endfor %} {{forms}} {% endcomment %}
+
     <form action="{% url 'app:download' %}" method="post">
       {% csrf_token %}
       <label for="num"></label>
@@ -21,8 +21,46 @@
         name="max"
       />
       <input type="hidden" name="listSet" value="{{listSet}}" />
+
+      <div class="container">
+        <ul id="viewImage">
+      
+      {% for link in linkList %}
+          <li>
+              <img src="{{link}}" alt="">
+              <input type="checkbox" name="select" value="{{link}}"/>
+          </li>
+      </div>
+        </ul>
+      {% endfor %}
       <button type="submit">送信</button>
     </form>
+
     <a href="{% url 'app:index' %}">音声入力ページに戻る</a>
+
+    {% comment %}
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+        {% comment %} view.pyから画像urlを受け取る {% endcomment %}
+        {% comment %} const data = {{ json_data|safe }}; // |safeでエスケープ処理を無効にしている。dataはオブジェクト型
+        console.log(typeof data);
+        console.log(data);
+        $(window).on('load', () => {
+          size = Object.keys(data).length;
+          console.log(size);
+          for(let i = 0; i < size; i++){
+            url = data[i];
+            $('<li>', {class: `item${i}`}).appendTo('#viewImage');
+            $('<img>', {src : url}).appendTo('.' + `item${i}`);
+          }
+
+        })  {% endcomment %}
+      {% comment %}
+    </script>
+    {% endcomment %}
   </body>
 </html>
