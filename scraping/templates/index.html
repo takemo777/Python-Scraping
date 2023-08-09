@@ -1,17 +1,31 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>いらすとやスクレイピング</title>
     {% block header %} {% endblock %}
   </head>
   <body>
     <h1>スクレイピングの世界へようこそ</h1>
+    <h2>いらすとやの画像を検索し、取得したい画像を選択しダウンロードします</h2>
     {% block content %}
-    <form action="{% url 'app:choice' %}" method="get">
-      <button type="submit" name="input audio">音声を入力</button>
+    <h3>音声を入力ボタンをクリックすると、音声認識が可能になりテキストボックスに認識した音声が入力されます<br>直接テキストボックスに検索したい単語を記入することも可能です</h3>
+    <form action="{% url 'app:choice' %}" method="get" id="form">
+      <button type="button" name="input audio" id="audio">音声を入力</button>
+      <input type="text" id="keyword" name="keyword"/>
+      <button type="submit" name="output audio" id="audio">この単語で検索</button>
+
     </form>
     {% endblock %}
   </body>
+
+  <script
+    src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+    crossorigin="anonymous"
+  ></script>
+
+  <script src="{% static 'js/index.js' %}"></script>
 </html>

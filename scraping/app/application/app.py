@@ -5,8 +5,9 @@ import speech_recognition as sr
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import tkinter as tk
-from pathlib import Path
-
+import tkinter.filedialog
+import os
+import sys
 
 def hasNextButton(url):
     # url受け取ってBSオブジェクトの作成
@@ -95,26 +96,26 @@ def getImagesFromKeyword(search_url):
 
     return result
 
-def handleSpeechInput():
-    recognizer = sr.Recognizer()
-    text = None
-    while True:
-        # マイクから音声を連続録音
-        with sr.Microphone() as source:
-            print("音声を録音してください...（5秒以内）")
-            audio_data = recognizer.listen(source, phrase_time_limit=5) #5秒で録音を停止する
+# def handleSpeechInput():
+#     recognizer = sr.Recognizer()
+#     text = None
+#     while True:
+#         # マイクから音声を連続録音
+#         with sr.Microphone() as source:
+#             print("音声を録音してください...（5秒以内）")
+#             audio_data = recognizer.listen(source, phrase_time_limit=5) #5秒で録音を停止する
 
-        try:
-            # 音声をテキストに変換
-            text = recognizer.recognize_google(audio_data, language="ja-JP") # テキスト内容
-            print("テキスト化結果: " + text)
-            return text
+#         try:
+#             # 音声をテキストに変換
+#             text = recognizer.recognize_google(audio_data, language="ja-JP") # テキスト内容
+#             print("テキスト化結果: " + text)
+#             return text
 
-        except sr.UnknownValueError:
-            print("音声を理解できませんでした。")
+#         except sr.UnknownValueError:
+#             print("音声を理解できませんでした。")
 
-        except sr.RequestError as e:
-            print("音声認識サービスにアクセスできませんでした。")
+#         except sr.RequestError as e:
+#             print("音声認識サービスにアクセスできませんでした。")
 
 # 詳細URLを引数で１つ受け取り、画像ページのURLを返す
 def getdownload_url(detailsUrl):
@@ -136,26 +137,24 @@ def getdownload_url(detailsUrl):
     return linkSet
 
 # 引数でgetImage関数から詳細ページから取得した画像ページのurlを取得(linkSetはセット型)
-def downloadImage(download_url):
+def downloadImage(download_url, out_folder):
 
     imageData = requests.get(download_url)
-    out_folder = Path("tkImage")
-    # フォルダを作成
-    out_folder.mkdir(exist_ok=True)
-#       ファイル名を指定
+#    ファイル名を指定
     filename = download_url.split("/")[-1]
-    out_path = out_folder.joinpath(filename)
+    out_path = os.path.join(out_folder, filename)
+    print(f'ファイルー名{out_folder}')
 
 #         画像をダウンロード
     with open(out_path, mode="wb") as f:
         f.write(imageData.content)
 
-def speechText(): 
+def speechText(keyword): 
 
     # 詳細ページを格納するセット
     result = []
     # 音声入力を処理
-    keyword = handleSpeechInput()
+    # keyword = handleSpeechInput()
     if keyword is not None:
         search_url = search(keyword)
         print(f"検索結果のURL: {search_url}")
@@ -175,11 +174,19 @@ def speechText():
     return result
 
 
-
 def startDownload(image_urls):
+    root = tk.Tk()
+    root.geometry("0x0+500+400")
+    # ダウンロード先フォルダを指定
+    out_folder = tkinter.filedialog.askdirectory()
+    if out_folder == "":
+        sys.exit()
+    else:
+        root.destroy()
+    print(f'フォルダー名{out_folder}') 
     # 取得した画像のURLをすべて表示する
     print("取得した画像のURL:")
     for idx, download_url in enumerate(image_urls, 1):
         print(f'{idx}番目{download_url}')
         #urlから画像をダウンロード
-        downloadImage(download_url)
+        downloadImage(download_url, out_folder)
